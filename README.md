@@ -1,2 +1,1 @@
-# chopsticks
-visualising the game of chopsticks
+chopstick graph

@@ -3,42 +3,55 @@ class Player:
     LEFT = 0
     RIGHT = 1
 
-    def __init__(self, hand=[1,1]):
-        self.__hand = hand
+    def __init__(self, left=1, right=1):
+        self.__hand = [left, right]
+        self.__is_dead = False
 
-    def __align(self):
+    def get(self, target_hand):
+        '''
+        Retrieves value of target hand
+        '''
+        return self.__hand[target_hand]
+
+    def add(self, target_hand, value):
+        '''
+        Adds value to target_hand.
+        If target_hand has 5 or more points, target_hand resets to 0 and
+        Player is dead.
+        '''
+        if self.__is_dead:
+            return False
+
+        self.__hand[target_hand] += value
+        if self.__hand[target_hand] >= 5:
+            self.__hand[target_hand] = 0
         self.__hand.sort()
 
-    def add(self, hand_index, value):
-        if self.is_dead():
-            return False
-
-        if value > 4:
-            return False
-        self.__hand[hand_index] += value
-        if self.__hand[hand_index] > 5:
-            self.__hand[hand_index] = 0
-
-        self.__align()
+        if self.__hand[Player.RIGHT] == 0:
+            self.__is_dead = True
         return True
 
     def split(self, value):
-        if self.is_dead():
+        '''
+        Transfer value from RIGHT hand to LEFT hand.
+        '''
+        if self.__is_dead:
             return False
-
-        if self.__hand[Player.RIGHT] <= value:
+        elif self.__hand[Player.RIGHT] - value <= 0:
+            return False
+        elif self.__hand[Player.LEFT] + value >= 5:
+            return False
+        elif self.__hand[Player.RIGHT] - self.__hand[Player.LEFT] == value:
             return False
 
         self.__hand[Player.RIGHT] -= value
         self.__hand[Player.LEFT] += value
+        self.__hand.sort()
         return True
 
     def is_dead(self):
-        return self.__hand[Player.LEFT] == 0 and \
-            self.__hand[Player.RIGHT] == 0
-
-    def get_hand(self):
-        return self.__hand
+        return self.__is_dead
 
     def __str__(self):
         return ''.join(list(map(str, self.__hand)))
+

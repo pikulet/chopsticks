@@ -1,73 +1,53 @@
-from player import Player
 from game import Game
+from player import Player
 
 from collections import deque
 
-add_combinations = (
-    (Player.LEFT, Player.LEFT),
-    (Player.LEFT, Player.RIGHT),
-    (Player.RIGHT, Player.LEFT),
-    (Player.RIGHT, Player.RIGHT)
-)
+def get_game(game_str):
+    def get_player(player_str):
+        pass
+    pass
 
-TURN1 = 'r'
-TURN2 = 'b'
+graph = dict()
+queue = deque()
+queue.append(str(Game()))
 
-def get_next_turn(turn):
-    if turn == TURN1:
-        return TURN2
-    else:
-        return TURN1
+combinations = [
+(Player.LEFT, Player.LEFT),
+(Player.LEFT, Player.RIGHT),
+(Player.RIGHT, Player.LEFT),
+(Player.RIGHT, Player.RIGHT),
+]
 
-def main():
-    graph = dict()
-    q = deque()
-    q.append(Game().get_state())
+while len(queue) > 0:
+    game_str = queue.pop()
+    if game_str in graph:
+        continue
 
-    turn = TURN1
-    while len(q) > 0:
-        source = q.pop()
-        g = Game(source)
-        source_str = turn+str(g)
-        print('**** Iterating **** \n', source_str)
-        if g.is_end():
+    neighbours = set()
+
+    print('***** Iterating %s *****' % game_str)
+    game = get_game(game_str)
+
+    for c in combinations:
+        success = game.add(c[0], c[1])
+        if not success:
             continue
 
-        if source in graph:
+        target_str = str(game)
+        neighbours.add(target_str)
+        if not game.is_ended():
+            queue.append(target_str)
+        game = get_game(game_str)
+
+    for i in range(1, 4):
+        success = game.split(i)
+        if not success:
             continue
-        graph[source] = set()
 
-        # Get all possible states from here
-        next_turn = get_next_turn(turn)
-
-        for c in add_combinations:
-            success = g.add(c[0], c[1])
-            if not success:
-                continue
-
-            if g.is_end():
-                target_str = turn   # winner
-            else:
-                q.append(g.get_state())
-                target_str = next_turn+str(g)
-
-            print('# Found Target: ', target_str)
-            graph[source].add(target_str)
-            g = Game(source)
-            
-        # split
-        for i in range(1, 4):
-            success = g.split(i)
-            if not success:
-                break
-
-            q.append(g.get_state())
-            target_str = next_turn+str(g)
-            print('# Found Target: ', target_str)
-            graph[source].add(target_str)
-            g = Game(source)
+        target_str = str(game)
+        neighbours.add(target_str)
+        queue.append(target_str
 
 
 
-if __name__ == '__main__':
-    main()

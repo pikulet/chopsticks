@@ -1,57 +1,51 @@
-from player import Player
-
 class Game:
 
-    PLAYER = 0
-    OPPONENT = 1
+    P1 = 0
+    P2 = 1
 
-    def __init__(self, players=(Player(), Player())):
-        self.__players = players
-        self.__end = False
+    def __init__(self, turn=Game.P1, p1=Player(), p2=Player()):
+        self.__players = (p1, p2)
+        self.__turn = turn
+        self.__is_ended = False
 
     def __change_turn(self):
-        self.__players = tuple(reversed(self.__players))
+        self.__turn = self.__get_opponent()
 
-    def is_end(self):
-        return self.__end
+    def __get_opponent(self):
+        return (self.__turn + 1) % 2
 
     def add(self, source_hand, target_hand):
-        if self.is_end():
+        if self.__is_ended:
             return False
 
-        value = self.__players[Game.PLAYER].get_hand()[source_hand]
-        print('Adding value of %d\n' % value)
+        source_player = self.__players[self.__turn]
+        value = source_player.get(source_hand)
         if value == 0:
             return False
 
-        print('Initial value of self %s\n' %
-              str(self.__players[Game.PLAYER]))
-        success = self.__players[Game.OPPONENT].add(target_hand, value)
-        if not success:
-            return False
+        target_player = self.__players[self.__get_opponent()]
+        target_player.add(target_hand, value)
 
-        print('Final value of opponent %s\n' %
-              str(self.__players[Game.OPPONENT]))
-        print('Final value of self %s\n' %
-              str(self.__players[Game.PLAYER]))
-
-        if self.__players[Game.OPPONENT].is_dead():
-            self.__end = True
-        self.__change_turn()
-        return True
+        if target_player.is_dead():
+            self.__is_ended = True
+            return True
+        else:
+            self.__change_turn()
+            return True
 
     def split(self, value):
-        if self.is_end():
-            return False
-
-        success = self.__players[Game.PLAYER].split(value)
-        if not success:
-            return False
+        source_player = self.__players[self.__turn]
+        success = source_player.split(value)
         self.__change_turn()
-        return True
+        return success
 
-    def get_state(self):
-        return self.__players
+    def is_ended(self):
+        return self.__is_ended
 
     def __str__(self):
-        return ''.join(list(map(str, self.__players)))
+        if self.__is_ended:
+            return str(self.__turn)
+        else:
+            return str(self.__turn) + str(p1) + str(p2) 
+
+
