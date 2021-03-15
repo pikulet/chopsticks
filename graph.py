@@ -47,7 +47,8 @@ while len(queue) > 0:
 
         target_str = str(game)
         neighbours.add(target_str)
-        queue.append(target_str
+        queue.append(target_str)
+        game = get_game(game_str)
 
 
 

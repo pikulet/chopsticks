@@ -1,9 +1,11 @@
+from player import Player
+
 class Game:
 
     P1 = 0
     P2 = 1
 
-    def __init__(self, turn=Game.P1, p1=Player(), p2=Player()):
+    def __init__(self, turn=P1, p1=Player(), p2=Player()):
         self.__players = (p1, p2)
         self.__turn = turn
         self.__is_ended = False
@@ -46,6 +48,5 @@ class Game:
         if self.__is_ended:
             return str(self.__turn)
         else:
-            return str(self.__turn) + str(p1) + str(p2) 
-
+            return str(self.__turn) + ''.join(list(map(str, self.__players)))
 
