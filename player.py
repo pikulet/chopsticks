@@ -7,6 +7,9 @@ class Player:
         self.__hand = [left, right]
         self.__is_dead = False
 
+    def __get_other_hand(self, hand):
+        return (hand + 1) % 2
+
     def get(self, target_hand):
         '''
         Retrieves value of target hand
@@ -48,6 +51,20 @@ class Player:
         self.__hand[Player.LEFT] += value
         self.__hand.sort()
         return True
+
+    def self_tap(self, source_hand):
+        '''
+        Add value from source hand to other hand.
+        '''
+        if self.__is_dead:
+            return False
+
+        value = self.__hand[source_hand]
+        if value == 0:
+            return False
+        
+        target_hand = self.__get_other_hand(source_hand)
+        return self.add(target_hand, value)
 
     def is_dead(self):
         return self.__is_dead

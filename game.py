@@ -41,6 +41,12 @@ class Game:
         self.__change_turn()
         return success
 
+    def self_tap(self, source_hand):
+        source_player = self.__players[self.__turn]
+        success = source_player.self_tap(source_hand)
+        self.__change_turn()
+        return success
+
     def is_ended(self):
         return self.__is_ended
 
