@@ -2,7 +2,6 @@ from game import Game
 from player import Player
 
 from collections import deque
-import pickle
 
 def get_game(game_str):
     values = [int(x) for x in game_str]
@@ -70,5 +69,5 @@ while len(queue) > 0:
 
     graph[game_str] = list(neighbours)
 
-with open('../graph.out', 'w') as f:
-    pickle.dump(graph, f)
+with open('graph.out', 'w') as f:
+    f.write(str(graph))
