@@ -10,3 +10,7 @@ states. Then, I generated a game theoretic graph of all states that can be
 achieved in the game. The graph shows that when both players use an optimal
 strategy, the game always ends in a tie (i.e. it never ends since both players
 never die).
+
+## Future Work
+
+If you're interested in training game agents, you can use the game engine in game.py
